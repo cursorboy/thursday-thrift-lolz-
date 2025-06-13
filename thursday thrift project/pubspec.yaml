@@ -24,4 +24,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
-    - assets/images/thursday_logo.png 
+    - assets/images/thursday_logo.png
+
+# Web-specific configuration
+web:
+  base-href: "/" 
