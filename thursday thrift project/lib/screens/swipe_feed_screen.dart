@@ -24,7 +24,9 @@ class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final appState = Provider.of<AppState>(context, listen: false);
-      _items = List.from(appState.availableItems);
+      setState(() {
+        _items = List.from(appState.availableItems);
+      });
     });
   }
 
@@ -82,6 +84,9 @@ class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
   }
 
   Widget _buildSwipeArea() {
+    if (_items.isEmpty) {
+      return SizedBox.shrink();
+    }
     return Center(
       child: Container(
         constraints: BoxConstraints(
@@ -209,22 +214,26 @@ class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
       _saveItem(_items[previousIndex]);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Saved ${_items[previousIndex].title}'),
+          content: Text('Saved \'${_items[previousIndex].title}\''),
           backgroundColor: Colors.green,
           duration: Duration(seconds: 1),
         ),
       );
     }
-    
+
     setState(() {
-      _currentIndex = currentIndex ?? 0;
+      if (_items.length > 1) {
+        _items.removeAt(previousIndex);
+        _currentIndex = 0;
+      }
     });
-    
+
     return true;
   }
 
   void _onEnd() {
     setState(() {
+      _items.clear();
       _currentIndex = 0;
     });
   }
