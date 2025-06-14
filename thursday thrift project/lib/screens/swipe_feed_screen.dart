@@ -220,14 +220,9 @@ class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
         ),
       );
     }
-
     setState(() {
-      if (_items.length > 1) {
-        _items.removeAt(previousIndex);
-        _currentIndex = 0;
-      }
+      _currentIndex = currentIndex ?? 0;
     });
-
     return true;
   }
 
