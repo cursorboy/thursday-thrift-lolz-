@@ -84,8 +84,8 @@ class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
   }
 
   Widget _buildSwipeArea() {
-    if (_items.isEmpty) {
-      return SizedBox.shrink();
+    if (_currentIndex >= _items.length) {
+      return _buildEmptyState();
     }
     return Center(
       child: Container(
@@ -96,11 +96,30 @@ class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: CardSwiper(
           controller: controller,
-          cardsCount: _items.length,
-          onSwipe: _onSwipe,
-          onEnd: _onEnd,
+          cardsCount: _items.length - _currentIndex,
+          onSwipe: (previousIndex, currentIndex, direction) {
+            if (direction == CardSwiperDirection.right) {
+              _saveItem(_items[_currentIndex + previousIndex]);
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Saved \'${_items[_currentIndex + previousIndex].title}\''),
+                  backgroundColor: Colors.green,
+                  duration: Duration(seconds: 1),
+                ),
+              );
+            }
+            setState(() {
+              _currentIndex++;
+            });
+            return true;
+          },
+          onEnd: () {
+            setState(() {
+              _currentIndex = _items.length;
+            });
+          },
           cardBuilder: (context, index, horizontalOffset, verticalOffset) {
-            return ThriftCard(item: _items[index]);
+            return ThriftCard(item: _items[_currentIndex + index]);
           },
         ),
       ),
@@ -207,30 +226,6 @@ class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
         ),
       ),
     );
-  }
-
-  bool _onSwipe(int previousIndex, int? currentIndex, CardSwiperDirection direction) {
-    if (direction == CardSwiperDirection.right) {
-      _saveItem(_items[previousIndex]);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Saved \'${_items[previousIndex].title}\''),
-          backgroundColor: Colors.green,
-          duration: Duration(seconds: 1),
-        ),
-      );
-    }
-    setState(() {
-      _currentIndex = currentIndex ?? 0;
-    });
-    return true;
-  }
-
-  void _onEnd() {
-    setState(() {
-      _items.clear();
-      _currentIndex = 0;
-    });
   }
 
   void _saveItem(ThriftItem item) {
