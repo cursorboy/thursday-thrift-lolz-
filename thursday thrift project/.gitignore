@@ -6,6 +6,8 @@
 .pub-cache/
 .pub/
 build/
+!build/web/
+!build/web/**
 *.class
 *.log
 *.pyc
@@ -26,6 +28,7 @@ build/
 .vscode/
 
 # Flutter web related
+lib/generated_plugin_registrant.dart
 
 # Symbolication related
 app.*.symbols
