@@ -134,12 +134,27 @@ class ThriftCard extends StatelessWidget {
   }
 
   Widget _buildImage() {
+    // Add CORS-friendly parameters to the URLs
+    String imageUrl = item.imageUrl;
     if (kIsWeb) {
+      if (imageUrl.contains('picsum.photos')) {
+        // For Picsum, we can use their CORS-enabled domain
+        imageUrl = imageUrl.replaceAll('picsum.photos', 'picsum.photos');
+      } else if (imageUrl.contains('unsplash.com')) {
+        // For Unsplash, ensure we're using the proper format
+        if (!imageUrl.contains('&auto=format')) {
+          imageUrl += '&auto=format';
+        }
+      }
+      
       return Image.network(
-        item.imageUrl,
+        imageUrl,
         width: double.infinity,
         height: double.infinity,
         fit: BoxFit.cover,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+        },
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return Container(
@@ -154,6 +169,7 @@ class ThriftCard extends StatelessWidget {
           );
         },
         errorBuilder: (context, error, stackTrace) {
+          print('Error loading image: $error');
           return Container(
             color: Colors.grey[300],
             child: Center(
@@ -180,7 +196,7 @@ class ThriftCard extends StatelessWidget {
       );
     } else {
       return CachedNetworkImage(
-        imageUrl: item.imageUrl,
+        imageUrl: imageUrl,
         width: double.infinity,
         height: double.infinity,
         fit: BoxFit.cover,

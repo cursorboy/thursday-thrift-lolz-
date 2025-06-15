@@ -8,9 +8,29 @@ class WaitlistButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: () async {
-        const url = 'https://tally.so/r/mKvbkX';
-        if (await canLaunch(url)) {
-          await launch(url, webOnlyWindowName: '_blank');
+        final Uri url = Uri.parse('https://tally.so/r/mKvbkX');
+        try {
+          if (await canLaunchUrl(url)) {
+            await launchUrl(url, webOnlyWindowName: '_blank', mode: LaunchMode.externalApplication);
+          } else {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Could not open waitlist form. Please try again later.'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+            }
+          }
+        } catch (e) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Could not open waitlist form. Please try again later.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
         }
       },
       style: ElevatedButton.styleFrom(
