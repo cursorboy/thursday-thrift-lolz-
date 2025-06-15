@@ -9,6 +9,7 @@
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="thursday_thrift_app">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
@@ -68,6 +69,12 @@
       padding: 20px;
       font-family: sans-serif;
     }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+    }
   </style>
 </head>
 <body>
@@ -92,12 +99,12 @@
 
         // Initialize Flutter
         loadingText.textContent = 'Loading application...';
-        const appRunner = await _flutter.loader.loadEntrypoint({
+        await _flutter.loader.loadEntrypoint({
           onEntrypointLoaded: async function(engineInitializer) {
             loadingText.textContent = 'Starting application...';
             try {
               const appRunner = await engineInitializer.initializeEngine({
-                renderer: 'html'
+                assetBase: "/"
               });
               await appRunner.runApp();
             } catch (e) {
