@@ -6,6 +6,7 @@ import '../providers/app_state.dart';
 import '../models/thrift_item.dart';
 import '../widgets/thrift_card.dart';
 import '../utils/dotted_background.dart';
+import '../widgets/waitlist_button.dart';
 
 class SwipeFeedScreen extends StatefulWidget {
   const SwipeFeedScreen({super.key});
@@ -66,6 +67,8 @@ class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
               right: 40,
               child: Row(
                 children: [
+                  WaitlistButton(),
+                  SizedBox(width: 16),
                   IconButton(
                     onPressed: _showSavedItems,
                     icon: Icon(Icons.favorite, color: Colors.red),
