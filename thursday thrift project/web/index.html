@@ -8,7 +8,6 @@
   <meta name="description" content="A Thursday thrift app clone with onboarding, style quiz, and swipe feed.">
 
   <!-- iOS meta tags & icons -->
-  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="thursday_thrift_app">
@@ -20,101 +19,45 @@
   <title>Thursday Thrift App</title>
   <link rel="manifest" href="manifest.json">
 
-  <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
   <style>
+    body {
+      background-color: #ffffff;
+      margin: 0;
+      padding: 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
     .loading {
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 0;
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      -ms-transform: translate(-50%, -50%);
-      transform: translate(-50%, -50%);
+      height: 100vh;
+      width: 100vw;
       flex-direction: column;
     }
-    
     .loading-text {
-      margin-top: 20px;
       font-family: sans-serif;
       color: #3498db;
-    }
-
-    .loading-indicator {
-      width: 50px;
-      height: 50px;
-      border: 3px solid #f3f3f3;
-      border-radius: 50%;
-      border-top: 3px solid #3498db;
-      -webkit-animation: spin 1s linear infinite;
-      animation: spin 1s linear infinite;
-    }
-    
-    @-webkit-keyframes spin {
-      0% { -webkit-transform: rotate(0deg); }
-      100% { -webkit-transform: rotate(360deg); }
-    }
-    
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    #error-container {
-      display: none;
-      color: red;
-      text-align: center;
-      padding: 20px;
-      font-family: sans-serif;
-    }
-
-    body {
-      margin: 0;
-      padding: 0;
-      background-color: #ffffff;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
   <div class="loading">
-    <div class="loading-indicator"></div>
     <div class="loading-text">Loading...</div>
   </div>
-  <div id="error-container"></div>
   <script>
-    function displayError(error) {
-      console.error('Flutter initialization error:', error);
-      const errorContainer = document.getElementById('error-container');
-      errorContainer.style.display = 'block';
-      errorContainer.innerHTML = `Error loading the application. Please try refreshing the page.<br>Details: ${error.message || error}`;
-      document.querySelector('.loading').style.display = 'none';
-    }
-
-    window.addEventListener('load', async function() {
-      try {
-        const loadingText = document.querySelector('.loading-text');
-        loadingText.textContent = 'Initializing Flutter...';
-
-        // Initialize Flutter
-        loadingText.textContent = 'Loading application...';
-        await _flutter.loader.loadEntrypoint({
-          onEntrypointLoaded: async function(engineInitializer) {
-            loadingText.textContent = 'Starting application...';
-            try {
-              const appRunner = await engineInitializer.initializeEngine({
-                assetBase: "/"
-              });
-              await appRunner.runApp();
-            } catch (e) {
-              displayError(e);
-            }
-          }
-        });
-      } catch (e) {
-        displayError(e);
-      }
+    window.addEventListener('load', function() {
+      _flutter.loader.loadEntrypoint({
+        onEntrypointLoaded: async function(engineInitializer) {
+          const appRunner = await engineInitializer.initializeEngine();
+          await appRunner.runApp();
+        }
+      });
     });
   </script>
 </body>
