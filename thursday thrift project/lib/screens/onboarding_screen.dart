@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'signup_screen.dart';
 import '../utils/dotted_background.dart';
+import '../widgets/waitlist_button.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
@@ -23,6 +24,12 @@ class OnboardingScreen extends StatelessWidget {
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) => SizedBox(height: 200, width: 600),
               ),
+            ),
+            // Waitlist button in the top right corner
+            Positioned(
+              top: 40,
+              right: 40,
+              child: WaitlistButton(),
             ),
             // Main content centered
             Center(

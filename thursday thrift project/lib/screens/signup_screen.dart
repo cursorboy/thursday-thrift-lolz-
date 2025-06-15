@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/app_state.dart';
 import 'style_quiz_screen.dart';
 import '../utils/dotted_background.dart';
+import '../widgets/waitlist_button.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -34,6 +35,11 @@ class _SignupScreenState extends State<SignupScreen> {
                 fit: BoxFit.contain,
                 errorBuilder: (context, error, stackTrace) => SizedBox(height: 200, width: 600),
               ),
+            ),
+            Positioned(
+              top: 40,
+              right: 40,
+              child: WaitlistButton(),
             ),
             Center(
               child: Container(

@@ -4,6 +4,7 @@ import '../providers/app_state.dart';
 import '../utils/mock_data.dart';
 import 'swipe_feed_screen.dart';
 import '../utils/dotted_background.dart';
+import '../widgets/waitlist_button.dart';
 
 class StyleQuizScreen extends StatefulWidget {
   const StyleQuizScreen({super.key});
@@ -23,6 +24,11 @@ class _StyleQuizScreenState extends State<StyleQuizScreen> {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
+            Positioned(
+              top: 40,
+              right: 40,
+              child: WaitlistButton(),
+            ),
             Positioned(
               top: 0,
               left: 0,
