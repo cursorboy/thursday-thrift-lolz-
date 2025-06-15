@@ -3,7 +3,7 @@
 # Configure Git to trust the directory
 git config --global --add safe.directory "*"
 
-# Create flutter user and directory
+# Create flutter directory
 export FLUTTER_HOME="/vercel/flutter"
 mkdir -p $FLUTTER_HOME
 
@@ -23,6 +23,10 @@ export FLUTTER_ROOT=$FLUTTER_HOME
 export PUB_CACHE="/vercel/.pub-cache"
 mkdir -p $PUB_CACHE
 export HOME="/vercel"
+
+# Print current directory for debugging
+pwd
+ls -la
 
 # Run Flutter doctor to verify installation
 flutter doctor -v

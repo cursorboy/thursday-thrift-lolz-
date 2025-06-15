@@ -1,8 +1,8 @@
 {
   "version": 2,
   "framework": null,
-  "buildCommand": "cd \"$VERCEL_GIT_REPO_SLUG\" && chmod +x vercel-build.sh && ./vercel-build.sh",
-  "outputDirectory": "build/web",
+  "buildCommand": "cd \"thursday thrift project\" && chmod +x vercel-build.sh && ./vercel-build.sh",
+  "outputDirectory": "thursday thrift project/build/web",
   "public": true,
   "cleanUrls": true,
   "headers": [
