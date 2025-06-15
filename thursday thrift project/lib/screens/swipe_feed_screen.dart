@@ -18,7 +18,7 @@ class SwipeFeedScreen extends StatefulWidget {
 class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
   final CardSwiperController controller = CardSwiperController();
   List<ThriftItem> _items = [];
-  int _currentIndex = 0;
+  bool _isSwipeInProgress = false;
 
   @override
   void initState() {
@@ -87,9 +87,10 @@ class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
   }
 
   Widget _buildSwipeArea() {
-    if (_currentIndex >= _items.length) {
+    if (_items.isEmpty) {
       return _buildEmptyState();
     }
+    
     return Center(
       child: Container(
         constraints: BoxConstraints(
@@ -99,30 +100,42 @@ class _SwipeFeedScreenState extends State<SwipeFeedScreen> {
         padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16),
         child: CardSwiper(
           controller: controller,
-          cardsCount: _items.length - _currentIndex,
+          cardsCount: _items.length,
           onSwipe: (previousIndex, currentIndex, direction) {
+            if (_isSwipeInProgress) return false;
+            
+            setState(() {
+              _isSwipeInProgress = true;
+            });
+
             if (direction == CardSwiperDirection.right) {
-              _saveItem(_items[_currentIndex + previousIndex]);
+              _saveItem(_items[previousIndex]);
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Saved \'${_items[_currentIndex + previousIndex].title}\''),
+                  content: Text('Saved \'${_items[previousIndex].title}\''),
                   backgroundColor: Colors.green,
                   duration: Duration(seconds: 1),
                 ),
               );
             }
-            setState(() {
-              _currentIndex++;
+
+            Future.delayed(Duration(milliseconds: 300), () {
+              if (mounted) {
+                setState(() {
+                  _isSwipeInProgress = false;
+                });
+              }
             });
+
             return true;
           },
           onEnd: () {
             setState(() {
-              _currentIndex = _items.length;
+              _items = [];
             });
           },
           cardBuilder: (context, index, horizontalOffset, verticalOffset) {
-            return ThriftCard(item: _items[_currentIndex + index]);
+            return ThriftCard(item: _items[index]);
           },
         ),
       ),
