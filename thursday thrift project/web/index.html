@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base href="$FLUTTER_BASE_HREF">
+  <base href="/">
 
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -19,10 +19,6 @@
   <title>Thursday Thrift App</title>
   <link rel="manifest" href="manifest.json">
 
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    var serviceWorkerVersion = null;
-  </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
   <style>
@@ -36,8 +32,15 @@
       left: 50%;
       -ms-transform: translate(-50%, -50%);
       transform: translate(-50%, -50%);
+      flex-direction: column;
     }
     
+    .loading-text {
+      margin-top: 20px;
+      font-family: sans-serif;
+      color: #3498db;
+    }
+
     .loading-indicator {
       width: 50px;
       height: 50px;
@@ -57,25 +60,54 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    #error-container {
+      display: none;
+      color: red;
+      text-align: center;
+      padding: 20px;
+      font-family: sans-serif;
+    }
   </style>
 </head>
 <body>
   <div class="loading">
     <div class="loading-indicator"></div>
+    <div class="loading-text">Loading...</div>
   </div>
+  <div id="error-container"></div>
   <script>
-    window.addEventListener('load', function(ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
-            appRunner.runApp();
-          });
-        }
-      });
+    function displayError(error) {
+      console.error('Flutter initialization error:', error);
+      const errorContainer = document.getElementById('error-container');
+      errorContainer.style.display = 'block';
+      errorContainer.innerHTML = `Error loading the application. Please try refreshing the page.<br>Details: ${error.message || error}`;
+      document.querySelector('.loading').style.display = 'none';
+    }
+
+    window.addEventListener('load', async function() {
+      try {
+        const loadingText = document.querySelector('.loading-text');
+        loadingText.textContent = 'Initializing Flutter...';
+
+        // Initialize Flutter
+        loadingText.textContent = 'Loading application...';
+        const appRunner = await _flutter.loader.loadEntrypoint({
+          onEntrypointLoaded: async function(engineInitializer) {
+            loadingText.textContent = 'Starting application...';
+            try {
+              const appRunner = await engineInitializer.initializeEngine({
+                renderer: 'html'
+              });
+              await appRunner.runApp();
+            } catch (e) {
+              displayError(e);
+            }
+          }
+        });
+      } catch (e) {
+        displayError(e);
+      }
     });
   </script>
 </body>
